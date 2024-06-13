@@ -9,8 +9,8 @@ PostgreSQL
 Simple JWT Tokens
 ```
 
-#### Install virtualenv
-```
+#### Install virtualenv library using pip
+```bash
 pip install virtualenv
 ```
 
@@ -20,17 +20,18 @@ pip install virtualenv
 virtualenv env
 ```
 
-<p>Windows OS activate virtual environment</p>
+#### Windows OS activate virtual environment
 ```bash
 env\Scripts\activate
 ```
 
-<p>UNIX OS activate virtual environment</p>
+#### UNIX OS activate virtual environment
 ```bash
 source bin\activate
+```
 
 
-<p>Install the requirements</p>
+#### Install the requirements
 ```bash
 pip install -r requirements.txt
 ```
