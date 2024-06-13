@@ -28,7 +28,7 @@ env\Scripts\activate
 <p>UNIX OS activate virtual environment</p>
 ```bash
 source bin\activate
-```
+
 
 <p>Install the requirements</p>
 ```bash
