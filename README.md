@@ -9,6 +9,19 @@ PostgreSQL
 Simple JWT Tokens
 ```
 
+#### Clone the Repository -- HTTPS
+```bash
+git clone https://github.com/Mount-Isaac/APIs_Development.git
+```
+
+#### Clone the Repository -- SSH
+```bash
+git clone git@github.com:Mount-Isaac/APIs_Development.git
+```
+#### Clone the repository -- GitHub CLI
+```bash 
+gh repo clone Mount-Isaac/APIs_Development
+```
 #### Install virtualenv library using pip
 ```bash
 pip install virtualenv
