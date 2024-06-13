@@ -9,13 +9,13 @@ PostgreSQL
 Simple JWT Tokens
 ```
 
-#### Install virtualenv</p>
+#### Install virtualenv
 ```
 pip install virtualenv
 ```
 
 
-<p>Create a Virtal Environment</p>
+##### Create a Virtal Environment
 ```bash
 virtualenv env
 ```
