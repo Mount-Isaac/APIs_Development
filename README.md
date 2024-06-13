@@ -30,7 +30,7 @@ env\Scripts\activate
 source bin\activate
 ```
 
-<p>Install the requirements run</p>
+<p>Install the requirements</p>
 ```bash
 pip install -r requirements.txt
 ```
