@@ -1,5 +1,11 @@
-env
+# Environment variables
 .env
-migrations 
-__pycache__
-.sqlite3
+
+# Database migrations
+migrations/
+
+# Python bytecode files
+__pycache__/
+
+# SQLite database files
+*.sqlite3
