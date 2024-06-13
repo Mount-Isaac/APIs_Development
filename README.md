@@ -10,7 +10,7 @@ Simple JWT Tokens
 ```
 
 <p>Install virtualenv</p>
-```bash
+```
 pip install virtualenv
 ```
 
