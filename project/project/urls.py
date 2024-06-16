@@ -15,9 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from APIs.views import page404_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('API_app.urls') )
+    path('api/', include('APIs.urls')),
+] 
+
+urlpatterns += [
+    re_path(r'^(?!admin|api).*$', page404_view, name='page404'),
 ]
