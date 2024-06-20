@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Client
+from .models import Customer
 
 # Register your models here.
 def register_models(*models):
@@ -7,4 +7,4 @@ def register_models(*models):
         admin.site.register(model)
 
 
-register_models(CustomUser, Client)
+register_models(Customer)
