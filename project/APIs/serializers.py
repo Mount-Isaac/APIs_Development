@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import Customer
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,7 +19,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     
     def validate(self, data):
         if len(data['password']) < 6:
-            raise ValidationError("Password must be more than 6 characters")
+            raise ValidationError({"Password": ["Password must be more than 6 characters"]})
 
         # print('validated data', data)
         return data
@@ -36,3 +37,14 @@ class CustomerSerializer(serializers.ModelSerializer):
             phone_number = validated_data['phone_number']
         )
         return customer
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # add custom claims 
+        token['username'] = user.username
+        
+        return token
