@@ -18,7 +18,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ['email', 'first_name', 'last_name', 'phone_number', 'password']
     
     def validate(self, data):
-        if len(data['password']) < 6:
+        if len(data['password']) < 8:
             raise ValidationError({"Password": ["Password must be more than 6 characters"]})
 
         # print('validated data', data)
@@ -48,3 +48,21 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         
         return token
+
+
+class UpdatePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        if len(value) < 8:
+            raise ValidationError("Your password must contain at least 8 characters")
+        
+        return value
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'phone_number']
+    
+    # def validiated_data(self, validated_data):
