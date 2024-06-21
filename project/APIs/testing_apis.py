@@ -24,7 +24,7 @@ headers = {
 }
 
 data_password = {
-    'old_password': 'Chalo6578#',
+    'old_password': 'kahumaN89Nai#',
     'new_password': 'KaLuH892@vIjys#'
 }
 
