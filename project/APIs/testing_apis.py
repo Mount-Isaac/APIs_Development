@@ -14,7 +14,8 @@ url = "http://127.0.0.1:8000/api/"
 access_token = os.getenv('ACCESS_TOKEN')
 
 endpoints = {
-    'update': f"{url}user/update",
+    'update-profile': f"{url}user/update/profile",
+    "update-password": f"{url}user/update/password"
 }
 
 headers = {
@@ -22,5 +23,21 @@ headers = {
     'Content-Type': 'application/json'
 }
 
-response = requests.post(endpoints.get('update'), headers=headers)
+data_password = {
+    'old_password': 'Chalo6578#',
+    'new_password': 'KaLuH892@vIjys#'
+}
+
+data_profile = {
+    'first_name': 'John',
+    'last_name': 'Mikeson',
+    'phone_number': '+1289028243',
+}
+
+# update password
+# response = requests.post(endpoints.get('update-password'), json=data_password, headers=headers)
+# print(response.json())
+
+# update profile
+response = requests.post(endpoints.get('update-profile'), json=data_profile, headers=headers)
 print(response.json())
