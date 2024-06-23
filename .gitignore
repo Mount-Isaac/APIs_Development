@@ -9,3 +9,7 @@ __pycache__/
 
 # SQLite database files
 *.sqlite3
+db.sqlite3
+
+__init__.py
+/migrations
