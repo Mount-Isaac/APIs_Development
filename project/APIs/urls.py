@@ -19,5 +19,5 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    re_path(r'^(?!auth/user).*$', page404_view, name='page404')
+    re_path(r'^(?!auth|user).*$', page404_view, name='page404')
 ]
