@@ -1,14 +1,19 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Customer
+from .models import Blog, Customer
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import get_user_model
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'password']
 
+class CustomerBlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name']
 
 class CustomerSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=50, write_only=True, required=True)
@@ -37,6 +42,7 @@ class CustomerSerializer(serializers.ModelSerializer):
             phone_number = validated_data['phone_number']
         )
         return customer
+    
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -66,3 +72,34 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'phone_number']
     
     # def validiated_data(self, validated_data):
+
+
+class UpdateProfilePictureSerializer(serializers.ModelSerializer):
+    # image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Customer
+        fields = ['image']
+
+
+class CreateBlogPostSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+    class Meta:
+        model = Blog 
+        fields = ['id', 'author', 'title', 'content', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def get_author(self, obj):
+        customer = Customer.objects.get(user=obj.author)
+        customer_dict =  CustomerBlogSerializer(customer).data
+        first_name = customer_dict.get('first_name')
+        last_name = customer_dict.get('last_name')
+        return f'{first_name} {last_name}'
+
+
+class UpdateBlogPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ['id', 'author', 'title', 'content', 'updated_at']
+        read_only_fields = ['id', 'updated_at']
+    
