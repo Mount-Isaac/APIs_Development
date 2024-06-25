@@ -6,10 +6,10 @@ from .views import(
     update_user_view,
     update_password_view,
     update_profile_picture,
-    create_blog_view,
-    update_blog_view,
-    all_blogs_view,
-    delete_blog_view,
+    create_post_view,
+    update_post_view,
+    all_posts_view,
+    delete_post_view,
 )
 from rest_framework_simplejwt.views import (
     TokenRefreshView, 
@@ -22,10 +22,10 @@ urlpatterns = [
     path('user/update/profile', update_user_view, name='update-user'),
     path('user/update/password', update_password_view, name='update-password'),
     path('user/update/image', update_profile_picture, name='update-image'),
-    path('user/create/blog', create_blog_view, name='create-blog'),
-    path('user/update/blog/<str:id>', update_blog_view, name='update-blog'),
-    path('all/blogs', all_blogs_view, name='all-blogs'),
-    path('user/delete/blog/<str:id>', delete_blog_view, name='delete-blog'),
+    path('user/create/blog', create_post_view, name='create-blog'),
+    path('user/update/blog/<str:id>', update_post_view, name='update-blog'),
+    path('all/blogs', all_posts_view, name='all-blogs'),
+    path('user/delete/blog/<str:id>', delete_post_view, name='delete-blog'),
 
 ]
 
