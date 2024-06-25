@@ -7,15 +7,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .models import Blog, Customer
+from .models import Post, Customer
 from .serializers import (
     MyTokenObtainPairSerializer,
     CustomerSerializer, 
     UpdatePasswordSerializer,
     UpdateProfileSerializer,
     UpdateProfilePictureSerializer,
-    CreateBlogPostSerializer,
-    UpdateBlogPostSerializer,
+    CreatePostSerializer,
+    UpdatePostSerializer,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -128,61 +128,61 @@ class UpdateProfilePictureAPIView(APIView):
             return Response({"Error": str(e).strip()}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CreateBlogPostAPIView(APIView):
+class CreatePostAPIView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         # valid user -> request.user
         user = get_object_or_404(User, id=4)
-        serializer = CreateBlogPostSerializer(data=request.data)
+        serializer = CreatePostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author=user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
-class UpdateBlogPostAPIView(APIView):
+class UpdatePostAPIView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def post(self, request, id, *args, **kwargs):
         # replace with request.user.id
         user = get_object_or_404(User,id=4)
 
-        # blog id is a parameterized variable
-        blog_obj = get_object_or_404(Blog, id=id)
+        # Post id is a parameterized variable
+        post_obj = get_object_or_404(Post, id=id)
 
-        # validate blog author 
-        if blog_obj.author != user:
-            return Response({"Error": "Only the blog author can update their post."}, status=status.HTTP_403_FORBIDDEN)
+        # validate Post author 
+        if post_obj.author != user:
+            return Response({"Error": "Only the Post author can update their post."}, status=status.HTTP_403_FORBIDDEN)
         
-        serializer = UpdateBlogPostSerializer(blog_obj, data=request.data, partial=True)
+        serializer = UpdatePostSerializer(post_obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-class AllBlogPostsAPIView(APIView):
+class AllPostsAPIView(APIView):
     def get(self, *args, **kwargs):
-        blogs = Blog.objects.all()
-        serializer = CreateBlogPostSerializer(blogs, many=True)
+        Posts = Post.objects.all()
+        serializer = CreatePostSerializer(Posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class UserBlogPosts(APIView):
+class UserPostPosts(APIView):
     pass
 
-class DeleteBlogPostAPIView(APIView):
+class DeletePostAPIView(APIView):
     def delete(self, request, id, *args,**kwargs):
         # replace with request.user.id
         user = get_object_or_404(User, id=4)
 
         # id is passed as a parameterized query
-        blog_obj = get_object_or_404(Blog, id=id)
+        post_obj = get_object_or_404(Post, id=id)
 
-        # validate blog author
-        if blog_obj.author != user:
-            return Response({"Error": "Only the blog author can delete their post."}, status=status.HTTP_403_FORBIDDEN)
+        # validate Post author
+        if post_obj.author != user:
+            return Response({"Error": "Only the Post author can delete their post."}, status=status.HTTP_403_FORBIDDEN)
         
-        blog_obj.delete()
+        post_obj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -192,8 +192,8 @@ login_view = LoginUserAPIView.as_view()
 update_user_view = UpdateUserAPIView.as_view()
 update_password_view = UpdateUserPasswordAPIView.as_view()
 update_profile_picture = UpdateProfilePictureAPIView.as_view()
-create_blog_view = CreateBlogPostAPIView.as_view()
-update_blog_view = UpdateBlogPostAPIView.as_view()
-delete_blog_view = DeleteBlogPostAPIView.as_view()
-all_blogs_view = AllBlogPostsAPIView.as_view()
+create_post_view = CreatePostAPIView.as_view()
+update_post_view = UpdatePostAPIView.as_view()
+delete_post_view = DeletePostAPIView.as_view()
+all_posts_view = AllPostsAPIView.as_view()
 page404_view = PageNotFoundAPIView.as_view()
