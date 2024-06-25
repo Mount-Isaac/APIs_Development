@@ -4,7 +4,7 @@ from cloudinary.models import CloudinaryField
 
 
 # whenever a user deletes their account and they 
-# have Blogs associated with them, transfer the 
+# have Posts associated with them, transfer the 
 # ownership to the admin
 # admin_user = User.objects.get(username='admin')
 
@@ -30,18 +30,64 @@ class Customer(models.Model):
         blank=True, 
         default='https://res.cloudinary.com/dkzk3c8rt/image/upload/v1719169562/APIs_customers/ja0cm5vzpjjzkzfhkpcs.png'
     )
+    following= models.ManyToManyField('self', symmetrical=False, related_name='followers')
+    '''
+        self, means the relationship is to the same model (Customer).
+        symmetrical=False, means if A follows B, B doesn't automatically follow A.
+        related_name='followedby',  creates a reverse relation. For any Tweep, 
+        you can access their followers with tweep.followers.all() and those they 
+        follow with tweep.followedby.all().
+    '''
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
 
-class Blog(models.Model):
+    def follow(self, profile_to_follow):
+        if profile_to_follow != self:
+            self.following.add(profile_to_follow)
+    
+    def unfollow(self, profile_to_unfollow):
+        self.following.remove(profile_to_unfollow)
+    
+    def is_following(self, profile):
+        return self.following.filter(pk=profile.pk).exists()
+
+
+class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=50)
     content = models.TextField(blank=False, null=False)
+    likes = models.ManyToManyField(User, related_name='liked_by', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_by', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     # add cloudinary image upload
 
     def __str__(self):
         return f"{self.title.capitalize()}"
+    
+    def like(self, customer):
+        if not self.likes.filter(id=customer.id).exists():
+            self.likes.add(customer)
+    
+    def unlike(self, customer):
+        if self.likes.filter(id=customer.id).exists():
+            self.likes.remove(customer)
+    
+    def is_liked_by(self, customer):
+        return self.likes.filter(id=customer.id).exists()
+    
+    @property
+    def total_likes(self):
+        return self.likes.count()
+    
+    @property
+    def total_dislikes(self):
+        return self.dislikes.count()
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
