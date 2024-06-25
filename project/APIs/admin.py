@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import (
     Customer, 
-    Blog
+    Post,
+    Comment
 )
 
 # Register your models here.
@@ -10,4 +11,4 @@ def register_models(*models):
         admin.site.register(model)
 
 
-register_models(Customer, Blog)
+register_models(Customer, Post, Comment)
