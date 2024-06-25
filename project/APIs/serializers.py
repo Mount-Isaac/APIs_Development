@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Blog, Customer
+from .models import Post, Customer
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username', 'password']
 
-class CustomerBlogSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = ['first_name', 'last_name']
@@ -82,24 +82,28 @@ class UpdateProfilePictureSerializer(serializers.ModelSerializer):
         fields = ['image']
 
 
-class CreateBlogPostSerializer(serializers.ModelSerializer):
+class CreatePostSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
+    total_likes = serializers.IntegerField()
+    total_dislikes = serializers.IntegerField()
+
     class Meta:
-        model = Blog 
-        fields = ['id', 'author', 'title', 'content', 'created_at', 'updated_at']
+        model = Post 
+        fields = ['id', 'author', 'title', 'content', 'total_likes', 'total_dislikes', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
     def get_author(self, obj):
         customer = Customer.objects.get(user=obj.author)
-        customer_dict =  CustomerBlogSerializer(customer).data
+        customer_dict =  CustomerSerializer(customer).data
         first_name = customer_dict.get('first_name')
         last_name = customer_dict.get('last_name')
         return f'{first_name} {last_name}'
 
 
-class UpdateBlogPostSerializer(serializers.ModelSerializer):
+
+class UpdatePostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Blog
+        model = Post
         fields = ['id', 'author', 'title', 'content', 'updated_at']
         read_only_fields = ['id', 'updated_at']
     
