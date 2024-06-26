@@ -21,7 +21,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 # # Create your views here.
 class LoginUserAPIView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
+    # permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
         # print(request.data)
@@ -33,12 +33,15 @@ class LoginUserAPIView(TokenObtainPairView):
             # print(serializer)
             user = serializer.user
             tokens = serializer.validated_data
+            customer = Customer.objects.get(user=user)
             print(user)
 
             data = {
                 'user': {
                     'id':user.id,
                     'email':user.username,
+                    'fullname': f'{customer.first_name} {customer.last_name}',
+                    'image': f'{str(customer.image.url).replace("http", "https")}'
                 },
                 'refresh': str(tokens.get('refresh')),
                 'access': str(tokens.get('access'))

@@ -11,16 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'password']
 
 class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = ['first_name', 'last_name']
-
-class CustomerSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=50, write_only=True, required=True)
     
     class Meta:
         model = Customer
-        fields = ['email', 'first_name', 'last_name', 'phone_number', 'password']
+        fields = ['email', 'first_name', 'last_name', 'phone_number', 'password', 'image']
     
     def validate(self, data):
         if len(data['password']) < 8:
@@ -39,7 +34,8 @@ class CustomerSerializer(serializers.ModelSerializer):
             email = validated_data['email'],
             first_name=validated_data['first_name'],
             last_name = validated_data['last_name'],
-            phone_number = validated_data['phone_number']
+            phone_number = validated_data['phone_number'],
+            image = validated_data['image']
         )
         return customer
     
