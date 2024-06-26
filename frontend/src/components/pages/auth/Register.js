@@ -1,8 +1,11 @@
 import { useContext } from "react";
 import AuthContext from "../../utils/AuthProvider";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faSpinner} from '@fortawesome/free-solid-svg-icons' 
 
 function Register() {
-    const {handleChange, handleSubmit, formData, setFormData} = useContext(AuthContext)
+    const {handleChange, handleSubmit, formData, setFormData, loading} = useContext(AuthContext)
+    const spinnerElement = <FontAwesomeIcon icon={faSpinner} spin size='lg'/>
     const handleFile = (e) => {
         const file = e.target.files[0]
 
@@ -55,7 +58,9 @@ function Register() {
                         </div>
 
                         <div className="text-center m-4">
-                            <input type="submit" className="btn btn-success btn-submit" />
+                            <button className="btn btn-success btn-submit">
+                                {loading ? spinnerElement : "Create Account"}
+                            </button>
                         </div>
 
                     </div>
