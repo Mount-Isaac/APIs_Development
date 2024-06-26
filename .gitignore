@@ -7,6 +7,8 @@ migrations/
 
 # Python bytecode files
 __pycache__/
+project/__pycache__/
+*.pyc
 
 # SQLite database files
 *.sqlite3
