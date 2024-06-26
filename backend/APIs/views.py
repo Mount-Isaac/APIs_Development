@@ -75,16 +75,18 @@ class PageNotFoundAPIView(APIView):
 
 class RegisterUserAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        # print('request',request.data)
+        print('request',request.data)
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             user = User.objects.get(username=serializer.data.get('email'))
+            image = str(Customer.objects.get(user=user).image.url).replace('http', 'https')
             
             user = {
                 "id":user.id,
                 "fullname": f"{serializer.data.get('first_name')} {serializer.data.get('last_name')}",
-                "email": serializer.data.get('email')
+                "email": serializer.data.get('email'), 
+                "image": image
             }
 
             return Response(user, status=status.HTTP_201_CREATED)
