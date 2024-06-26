@@ -1,0 +1,20 @@
+input {
+    border: 2px solid rgb(222, 214, 214) !important;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 10px;
+    margin-left: 5px;
+    font-size: 18px;
+}
+.btn-submit {
+    width: 200px;
+    height: 43px;
+    background-color: rgb(70, 145, 70) !important;
+}
+.btn-submit:hover {
+    background-color: green !important;
+    transform: scale(1.1);
+    font-size: 19px;
+}
