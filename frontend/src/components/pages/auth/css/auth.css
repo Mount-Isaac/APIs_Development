@@ -37,4 +37,8 @@ label {
 
 .Link, a {
     font-size: 21px  !important;
+    text-decoration: none;
+}
+ul {
+    list-style-type: square;
 }
