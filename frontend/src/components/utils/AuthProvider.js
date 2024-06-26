@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 // create a context object to share data between the components 
 const AuthContext = createContext()
@@ -8,8 +9,10 @@ export default AuthContext
 // provider to all accessing the data
 const AuthProvider = ({children}) => {
     // define the data variables here 
+    const navigate = useNavigate()
     const [user, setUser] = useState({'user': ""});
     const [formData, setFormData] = useState({})
+    const [loading, setLoading] = useState(false)
     const [updateTokens, setUpdateTokens] = useState(false)
     const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('authTokens')))
     const url = "http://localhost:8000/api/"
@@ -24,26 +27,36 @@ const AuthProvider = ({children}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const my_data = new FormData()
         
         // post data to the backend endpoint now
-        const handleRegister = async() => {
+        const handleRegister = async(my_data) => {
+            console.log(my_data)
+            setLoading(true)
+
             const endpoint = `${url}auth/register`
             const headers = {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             }
 
             try {
-                const {data, status} = await axios.post(endpoint, formData, {headers})
-                if(status === 200){
+                const {data, status} = await axios.post(endpoint, my_data, {headers})
+                if(status === 201){
+                    setUser(data)
+                    setLoading(false)
+                    navigate('/')
                     console.log(data)
                 }
-                console.log(status, data)
             } catch (error) {
+                setLoading(false)
                 console.log(error.response)
             }
         }
-        console.log(formData)
-        handleRegister()
+
+        for(let key in formData){
+            my_data.append(key, formData[key])
+        }
+        handleRegister(my_data)
     }
     
     
@@ -62,6 +75,7 @@ const AuthProvider = ({children}) => {
         user:user,
         authTokens:authTokens,
         formData:formData,
+        loading:loading,
 
         // dispatchers
         setUser:setUser,
