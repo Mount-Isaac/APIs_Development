@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
+import axios from 'axios'
 
 // create a context object to share data between the components 
 const AuthContext = createContext()
@@ -8,9 +9,16 @@ export default AuthContext
 const AuthProvider = ({children}) => {
     // define the data variables here 
     const [user, setUser] = useState({'user': ""});
+    const [formData, setFormData] = useState({
+        "email": "",
+        "first_name": "",
+        "last_name": "",
+        "phone_number": "",
+        "passwords": ""
+    })
     const [updateTokens, setUpdateTokens] = useState(false)
     const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('authTokens')))
-
+    const url = "http://localhost:8000/api/"
 
     // define the functions here 
     const handleLogin = () => {
@@ -18,17 +26,59 @@ const AuthProvider = ({children}) => {
         return 'logged in'
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        
+        // post data to the backend endpoint now
+        const handleRegister = async() => {
+            const endpoint = `${url}auth/register`
+            const headers = {
+                'Content-Type': 'application/json'
+            }
+
+            try {
+                const {data, status} = await axios.post(endpoint, formData, {headers})
+                if(status === 200){
+                    console.log(data)
+                }
+                console.log(status, data)
+            } catch (error) {
+                if(error.response.status === 400){
+                    console.log(error.response.data)  
+                }else{
+                    console.log(error)
+                }
+            }
+        }
+        console.log(formData)
+        handleRegister()
+    }
+    
+    
+    const handleChange =  (e) => {
+        const {name, value} = e.target
+    
+        setFormData(prevData => ({
+            ...prevData, 
+            [name]:value
+        }))
+    }
+
     // data passed between component
     const contextData = {
         // variables
         user:user,
         authTokens:authTokens,
+        formData:formData,
 
         // dispatchers
         setUser:setUser,
+        setFormData, setFormData,
 
         // functions
-        handleLogin:handleLogin
+        handleLogin:handleLogin,
+        handleSubmit:handleSubmit,
+        handleChange:handleChange,
     }
 
     // define useEffects hooks here 
