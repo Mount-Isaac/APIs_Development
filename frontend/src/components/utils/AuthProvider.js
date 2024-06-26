@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { json, useNavigate } from 'react-router-dom'
 
 // create a context object to share data between the components 
 const AuthContext = createContext()
@@ -10,11 +10,14 @@ export default AuthContext
 const AuthProvider = ({children}) => {
     // define the data variables here 
     const navigate = useNavigate()
-    const [user, setUser] = useState({'user': ""});
+    const [user, setUser] = useState(localStorage.getItem('customer') 
+        ? JSON.parse(localStorage.getItem('customer'))
+        : {'user': ""}
+    );
     const [formData, setFormData] = useState({})
     const [loading, setLoading] = useState(false)
     const [updateTokens, setUpdateTokens] = useState(false)
-    const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('authTokens')))
+    const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('Tokens')))
     const url = "http://localhost:8000/api/"
 
     // define the functions here 
@@ -31,6 +34,14 @@ const AuthProvider = ({children}) => {
             const {status, data } = await axios.post(endpoint, formData, {headers})
             console.log(data, status)
             if(status === 200){
+                localStorage.setItem('Tokens', JSON.stringify(
+                    {
+                        "refresh": data.refresh,
+                        "access": data.access 
+                    }
+                ))
+                localStorage.setItem('customer', JSON.stringify(data.user))
+
                 setUser(data.user)
                 setAuthTokens({
                     "refresh": data.refresh,
@@ -84,6 +95,9 @@ const AuthProvider = ({children}) => {
     }
     
     const handleLogout = () => {
+        localStorage.removeItem('Tokens')
+        localStorage.removeItem('customer')
+
         setUser({"user":""})
     }
     
