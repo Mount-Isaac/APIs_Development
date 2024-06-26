@@ -80,4 +80,6 @@ hr{
     font-weight: 600;
     border-radius: 5px;
 }
-
+.dropdown-toggle::after{
+    display: none;
+}
