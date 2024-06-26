@@ -34,7 +34,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 # AUTH_USER_MODEL = 'APIs.CustomUser'
 
-
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
 # Application definition
 
 INSTALLED_APPS = [
