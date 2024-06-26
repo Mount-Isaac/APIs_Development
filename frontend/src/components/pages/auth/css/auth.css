@@ -2,6 +2,11 @@ input {
     border: 2px solid rgb(222, 214, 214) !important;
 }
 
+.image-logo {
+    height: 45px !important;
+    width: 45px;
+    border-radius: 50%;
+}
 label {
     font-weight: 600;
     margin-top: 10px;
@@ -17,4 +22,19 @@ label {
     background-color: green !important;
     transform: scale(1.1);
     font-size: 19px;
+}
+
+.btn-login {
+    width: 200px;
+    height: 43px;
+    background-color: rgb(70, 71, 145) !important;
+}
+.btn-login:hover {
+    background-color: rgb(40, 27, 143) !important;
+    transform: scale(1.1);
+    font-size: 19px;
+}
+
+.Link, a {
+    font-size: 21px  !important;
 }

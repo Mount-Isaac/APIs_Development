@@ -14,7 +14,7 @@ function Register() {
 
     }
     return ( 
-        <div style={{backgroundColor:'whitesmoke'}} className="border p-3 shadow">
+        <div style={{backgroundColor:'whitesmoke'}} className="border p-3 my-3 shadow">
             <h2 className="text-center mb-3 text-primary">Register User API</h2>
             <div>
                 <form onSubmit={handleSubmit}>
