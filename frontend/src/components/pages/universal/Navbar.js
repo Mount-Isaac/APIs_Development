@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import Logo from '../../../images/logo.jpg'
+import { useContext } from "react";
+import AuthContext from "../../utils/AuthProvider";
 
 function Navbar() {
+    const {user} = useContext(AuthContext)
     return ( 
         <div>
             <nav style={{color:"white"}} className="navbar fixed-top p-4 navbar-expand-md bg-secondary text-dark">
@@ -15,7 +18,7 @@ function Navbar() {
                     <div className="collapse navbar-collapse" id="navbarText">
                         <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className="nav-link text-white active Link" aria-current="page" to="#">Home</Link>
+                                <Link className="nav-link text-white active Link" aria-current="page" to="/">{user.email ? "Dashboard" : "Home"}</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link text-white Link" to="/posts">Posts</Link>
@@ -25,21 +28,28 @@ function Navbar() {
                             </li>
 
                             <li className="nav-item">
-                                <Link className="nav-link text-white Link" to="/auth">Authentication</Link>
-                            </li>
-
-                            <li className="nav-item">
                                 <a className="nav-link text-white" href="#">About</a>
                             </li>
                         </ul>
 
                         <ul className="navbar-nav mr-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/api/auth/login">Login</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/api/auth/register">Register</Link>
-                            </li>
+                            {
+                                user.email ? 
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-white" to="/api/auth/login">{user.fullname}</Link>
+                                    </li>
+                                :
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-white" to="/api/auth/login">Login</Link>
+                                    </li>
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-white" to="/api/auth/register">Register</Link>
+                                    </li>
+                                </>
+                            }
                         </ul>
                     </div>
                 </div>
