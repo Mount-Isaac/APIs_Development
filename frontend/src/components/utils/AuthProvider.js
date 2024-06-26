@@ -9,21 +9,17 @@ export default AuthContext
 const AuthProvider = ({children}) => {
     // define the data variables here 
     const [user, setUser] = useState({'user': ""});
-    const [formData, setFormData] = useState({
-        "email": "",
-        "first_name": "",
-        "last_name": "",
-        "phone_number": "",
-        "passwords": ""
-    })
+    const [formData, setFormData] = useState({})
     const [updateTokens, setUpdateTokens] = useState(false)
     const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('authTokens')))
     const url = "http://localhost:8000/api/"
 
     // define the functions here 
-    const handleLogin = () => {
+    const handleLogin = (e) => {
+        e.preventDefault()
+        console.log(formData)
         // simulation function
-        return 'logged in'
+        // return 'logged in'
     }
 
     const handleSubmit = (e) => {
@@ -43,11 +39,7 @@ const AuthProvider = ({children}) => {
                 }
                 console.log(status, data)
             } catch (error) {
-                if(error.response.status === 400){
-                    console.log(error.response.data)  
-                }else{
-                    console.log(error)
-                }
+                console.log(error.response)
             }
         }
         console.log(formData)
