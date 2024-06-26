@@ -4,10 +4,10 @@ import { useContext } from "react";
 import AuthContext from "../../utils/AuthProvider";
 
 function Navbar() {
-    const {user} = useContext(AuthContext)
+    const {user, handleLogout} = useContext(AuthContext)
     return ( 
         <div>
-            <nav style={{color:"white"}} className="navbar fixed-top p-4 navbar-expand-md bg-secondary text-dark">
+            <nav style={{color:"white"}} className="navbar fixed-top p-2 navbar-expand-md bg-secondary text-dark">
                 <div className="container">
                     <Link className="navbar-brand" to="/">
                         <img className="image-logo" src={Logo} alt="APIs Development"/>
@@ -36,9 +36,29 @@ function Navbar() {
                             {
                                 user.email ? 
 
+                                <>
                                     <li className="nav-item">
-                                        <Link className="nav-link text-white" to="/api/auth/login">{user.fullname}</Link>
+                                            <div className="dropdown nav-link">
+                                                <button
+                                                    className="btn btn-secondary dropdown-toggle" 
+                                                    type="button" id="dropdownMenuButton" 
+                                                    data-bs-toggle="dropdown" 
+                                                    aria-haspopup="true" 
+                                                    aria-expanded="false"
+                                                >
+                                                    <img className="image-nav" src={user.image} alt="Image"/>
+                                                </button>
+
+                                                <div class="dropdown-menu dropdown-nav" aria-labelledby="dropdownMenuButton">
+                                                    <li class="dropdown-item">{user.fullname}</li>
+                                                    <li class="dropdown-item">{user.email}</li><hr/>
+                                                    <p onClick={()=>handleLogout()} class="dropdown-item">Logout</p>
+                                                </div>
+
+                                            </div>
+
                                     </li>
+                                </>
                                 :
                                 <>
                                     <li className="nav-item">

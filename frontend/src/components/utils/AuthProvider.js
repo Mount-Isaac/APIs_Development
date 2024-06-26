@@ -18,9 +18,33 @@ const AuthProvider = ({children}) => {
     const url = "http://localhost:8000/api/"
 
     // define the functions here 
-    const handleLogin = (e) => {
+    const handleLogin = async(e) => {
         e.preventDefault()
         console.log(formData)
+
+        try {
+            setLoading(true)
+            const endpoint = `${url}auth/login`
+            const headers = {
+                'Content-Type': 'application/json'
+            }
+            const {status, data } = await axios.post(endpoint, formData, {headers})
+            console.log(data, status)
+            if(status === 200){
+                setUser(data.user)
+                setAuthTokens({
+                    "refresh": data.refresh,
+                    "access": data.access 
+                })
+            }
+            setLoading(false)
+            navigate('/')
+            
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+        }
+        // console.log(formData)
         // simulation function
         // return 'logged in'
     }
@@ -59,6 +83,9 @@ const AuthProvider = ({children}) => {
         handleRegister(my_data)
     }
     
+    const handleLogout = () => {
+        setUser({"user":""})
+    }
     
     const handleChange =  (e) => {
         const {name, value} = e.target
@@ -85,6 +112,7 @@ const AuthProvider = ({children}) => {
         handleLogin:handleLogin,
         handleSubmit:handleSubmit,
         handleChange:handleChange,
+        handleLogout:handleLogout,
     }
 
     // define useEffects hooks here 

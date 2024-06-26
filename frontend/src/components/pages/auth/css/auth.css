@@ -7,6 +7,11 @@ input {
     width: 45px;
     border-radius: 50%;
 }
+.image-nav {
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+}
 label {
     font-weight: 600;
     margin-top: 10px;
@@ -42,3 +47,37 @@ label {
 ul {
     list-style-type: square;
 }
+.dropdown-nav {
+    margin-left: -80px;
+    background-color: whitesmoke;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.dropdown-nav > li:hover {
+    background-color: powderblue;
+    font-weight: 600;
+    font-size: 17px;
+    border-radius: 5px;
+}
+.dropdown-nav > p {
+    margin-bottom: 5px;
+    padding-bottom: 5px ;
+}
+
+hr{
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+.dropdown-nav > p:hover {
+    background-color: rgb(200, 146, 146);
+    /* font-weight: 600; */
+    font-size: 17px;
+    /* border-radius: 5px; */
+    cursor: pointer;
+}
+.dropdown-nav > li:focus {
+    color: blue !important;
+    font-weight: 600;
+    border-radius: 5px;
+}
+
