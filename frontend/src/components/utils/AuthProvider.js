@@ -60,38 +60,39 @@ const AuthProvider = ({children}) => {
         // return 'logged in'
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    // post data to the backend endpoint now
+    const handleRegister = async() => {
         const my_data = new FormData()
-        
-        // post data to the backend endpoint now
-        const handleRegister = async(my_data) => {
-            console.log(my_data)
-            setLoading(true)
-
-            const endpoint = `${url}auth/register`
-            const headers = {
-                'Content-Type': 'multipart/form-data'
-            }
-
-            try {
-                const {data, status} = await axios.post(endpoint, my_data, {headers})
-                if(status === 201){
-                    setUser(data)
-                    setLoading(false)
-                    navigate('/')
-                    console.log(data)
-                }
-            } catch (error) {
-                setLoading(false)
-                console.log(error.response)
-            }
-        }
 
         for(let key in formData){
             my_data.append(key, formData[key])
         }
-        handleRegister(my_data)
+
+        console.log(my_data)
+        setLoading(true)
+
+        const endpoint = `${url}auth/register`
+        const headers = {
+            'Content-Type': 'multipart/form-data'
+        }
+
+        try {
+            const {data, status} = await axios.post(endpoint, my_data, {headers})
+            if(status === 201){
+                setUser(data)
+                setLoading(false)
+                navigate('/')
+                console.log(data)
+            }
+        } catch (error) {
+            setLoading(false)
+            console.log(error.response)
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        handleRegister()
     }
     
     const handleLogout = () => {
@@ -127,6 +128,7 @@ const AuthProvider = ({children}) => {
         handleSubmit:handleSubmit,
         handleChange:handleChange,
         handleLogout:handleLogout,
+        handleRegister:handleRegister
     }
 
     // define useEffects hooks here 
