@@ -1,0 +1,69 @@
+.users-container{
+    background-color: white;
+}
+.api {
+    padding: 15px 15px 0px 15px;
+}
+
+.api > h4 {
+    background-color: whitesmoke;
+    padding: 10px;
+    margin-top: 0px;
+}
+.myhr {
+    width: 100%;
+    border-bottom: 2px dotted rgb(211, 204, 204);
+    margin: 20 20 0 20;
+}
+.btn-custom {
+    width: 100px;
+    margin-right: 15px;
+    background-color: rgb(242, 174, 150);
+}
+.btn-custom:hover {
+    background-color: coral;
+    transform: scale(1.1);
+}
+.api-p > span:nth-child(2) {
+    font-family: cursive;
+    font-weight: 600;
+    font-size: 18px;
+}
+.api-p > span:nth-child(4){
+    cursor: pointer;
+}
+
+.api-div > p {    
+    background-color: rgb(245, 234, 234);
+    padding: 10px;
+    border-radius: 3px;
+}
+.row-testing > div > pre{
+    margin-top: 0px;
+    margin-bottom: 1px;
+    font-family: monospace;
+}
+.custom-input > input {
+    border-radius: 5px;
+    border: none;
+    box-shadow: none;
+}
+.custom-input > input:focus {
+    border: 2px dotted blue !important;
+}
+
+textarea {
+    border: none;
+    width: 100%;
+    outline: none;
+    box-shadow: none;
+}
+textarea:focus {
+    outline: blue;
+    /* border: 2px solid rgb(73, 73, 113); */
+    box-shadow: 0 0 5px rgba(0, 0, 255, 0.5);
+}
+h5 {
+    font-weight: 400;
+    font-size: 19px;
+}
