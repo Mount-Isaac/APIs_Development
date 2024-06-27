@@ -6,6 +6,8 @@ import {BrowserRouter} from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './components/pages/auth/css/auth.css'
+import './components/pages/user/css/users.css'
+import './components/pages/posts/css/posts.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
