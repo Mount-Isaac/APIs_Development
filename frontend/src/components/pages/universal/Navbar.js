@@ -21,14 +21,14 @@ function Navbar() {
                                 <Link className="nav-link text-white active Link" aria-current="page" to="/">{user.email ? "Dashboard" : "Home"}</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link text-white Link" to="/posts">Posts</Link>
+                                <Link className="nav-link text-white Link" to="/api/post">Posts</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link text-white Link" to="/user">User</Link>
+                                <Link className="nav-link text-white Link" to="/api/user">User</Link>
                             </li>
 
                             <li className="nav-item">
-                                <a className="nav-link text-white" href="#">About</a>
+                                <Link className="nav-link text-white Link" to="api/about">About</Link>
                             </li>
                         </ul>
 
