@@ -1,7 +1,10 @@
 # BACKEND
 # Environment variables
+.env.local
+.vscode
 .env
-
+env
+.sqlite3
 # Database migrations
 migrations/
 
