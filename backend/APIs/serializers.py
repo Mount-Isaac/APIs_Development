@@ -80,13 +80,13 @@ class UpdateProfilePictureSerializer(serializers.ModelSerializer):
 
 class CreatePostSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
-    total_likes = serializers.IntegerField()
-    total_dislikes = serializers.IntegerField()
+    # total_likes = serializers.IntegerField()
+    # total_dislikes = serializers.IntegerField()
 
     class Meta:
         model = Post 
         fields = ['id', 'author', 'title', 'content', 'total_likes', 'total_dislikes', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'total_dislikes', 'total_likes']
 
     def get_author(self, obj):
         customer = Customer.objects.get(user=obj.author)

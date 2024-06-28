@@ -19,13 +19,18 @@ urlpatterns = [
     path('token/refresh', TokenRefreshView.as_view(), name='refresh'),
     path('auth/register', register_view, name='register-user'),
     path('auth/login', login_view, name='login-user'),
+
     path('user/update/profile', update_user_view, name='update-user'),
     path('user/update/password', update_password_view, name='update-password'),
     path('user/update/image', update_profile_picture, name='update-image'),
-    path('user/create/blog', create_post_view, name='create-blog'),
-    path('user/update/blog/<str:id>', update_post_view, name='update-blog'),
-    path('all/blogs', all_posts_view, name='all-blogs'),
-    path('user/delete/blog/<str:id>', delete_post_view, name='delete-blog'),
+
+    path('post/create', create_post_view, name='create-post'),
+    path('post/view/<str:id>', create_post_view, name='create-post'),
+    path('post/update/<str:id>', update_post_view, name='update-post'),
+    path('post/delete/<str:id>', delete_post_view, name='delete-post'),
+    path('post/all', all_posts_view, name='all-posts'),
+    path('post/user/<str:id>', all_posts_view, name='user-posts'),
+
 
 ]
 
