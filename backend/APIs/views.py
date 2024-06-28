@@ -57,13 +57,16 @@ class UpdateUserAPIView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = UpdateProfileSerializer(data=request.data)
         if serializer.is_valid():
-            user = request.user
-            user.first_name = serializer.validated_data.get('first_name')
-            user.last_name = serializer.validated_data.get('last_name')
-            user.phone_number = serializer.validated_data.get('phone_number')
-            user.save()
-            # return response OK
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            print(request.user)
+            customer = Customer.objects.get(user=request.user)
+            if customer:
+                customer.first_name = serializer.validated_data.get('first_name')
+                customer.last_name = serializer.validated_data.get('last_name')
+                customer.phone_number = serializer.validated_data.get('phone_number')
+                customer.save()
+                # return response OK
+                return Response({"data":"user profile updated successfully"}, status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
         # Invalidated data
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -106,7 +109,7 @@ class UpdateUserPasswordAPIView(APIView):
                 user.set_password(serializer.validated_data.get('new_password'))
                 user.save()
                 update_session_auth_hash(request, user)
-                return Response({"data":"Password updated successfully"}, status=status.HTTP_200_OK)
+                return Response({"data":"Password updated successfully"}, status=status.HTTP_202_ACCEPTED)
             return Response({"data": "Incorrect old password"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
