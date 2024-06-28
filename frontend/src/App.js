@@ -12,7 +12,6 @@ import Page404 from './components/pages/universal/Page404'
 import Post from './components/pages/posts/Posts'
 import User from './components/pages/user/User'
 import About from './components/pages/universal/About'
-import Testing from './components/pages/universal/Testing'
 
 export default function App() {
   return (
@@ -29,7 +28,6 @@ export default function App() {
             <Route  path='/api/auth/login' element={<Login/>}/>
             <Route path='/api/about' element={<About/>}/>
             <Route  path='*' element={<Page404/>}/>
-            <Route path='/testing' element={<Testing/>}/>
           </Routes>
         </div>
       </AuthProvider>
