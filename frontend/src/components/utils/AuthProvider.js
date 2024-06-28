@@ -122,13 +122,13 @@ const AuthProvider = ({children}) => {
         // dispatchers
         setUser:setUser,
         setFormData, setFormData,
+        setAuthTokens:setAuthTokens,
 
         // functions
         handleLogin:handleLogin,
         handleSubmit:handleSubmit,
         handleChange:handleChange,
-        handleLogout:handleLogout,
-        handleRegister:handleRegister
+        handleLogout:handleLogout
     }
 
     // define useEffects hooks here 
