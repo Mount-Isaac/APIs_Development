@@ -8,6 +8,7 @@ import Homepage from './components/pages/universal/Homepage'
 import Navbar from './components/pages/universal/Navbar'
 import Page404 from './components/pages/universal/Page404'
 import About from './components/pages/universal/About'
+import Footer from './components/pages/universal/Footer'
 
 import Register from './components/pages/auth/Register'
 import Login from './components/pages/auth/Login'
@@ -23,13 +24,12 @@ import Post from './components/pages/posts/Post'
 export default function App() {
   return (
     <AuthProvider>
+        <div style={{paddingTop:100}} className='bg-white'>
         <Navbar/>
-        <div className='container p-5 my-5'>
           <Routes>
             {/* requires authentications */}
             <Route element={<PrivateRoutes/>}>
               <Route path='/api/post/create' element={<CreatePost/>}/>
-              <Route path='/api/post/view/:id' element={<ViewPost/>}/>
               <Route path='/api/post/edit/:id' element={<EditPost/>}/>
             </Route>
 
@@ -40,6 +40,7 @@ export default function App() {
 
             {/* posts routes */}
             <Route path='/api/post' element={<Post/>}/>
+            <Route path='/api/post/view/:id' element={<ViewPost/>}/>
             <Route path='/api/posts/all/' element={<AllPosts/>}/>
             <Route path='/api/posts/user/:id' element={<UserPosts/>}/>
 
@@ -49,6 +50,7 @@ export default function App() {
             <Route  path='*' element={<Page404/>}/>
           </Routes>
         </div>
+        <Footer/>
       </AuthProvider>
 
   )
