@@ -171,12 +171,22 @@ class UpdatePostAPIView(APIView):
         
 class AllPostsAPIView(APIView):
     def get(self, *args, **kwargs):
-        Posts = Post.objects.all()
+        Posts = Post.objects.all().order_by('-updated_at')
         serializer = CreatePostSerializer(Posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class UserPostPosts(APIView):
-    pass
+class UserPostAPIView(APIView):
+    # permission_classes = (IsAuthenticated,)
+    def get(self, request, id, *args, **kwargs):
+        print(id)
+        customer = get_object_or_404(Customer, id=id)
+        if customer:
+            user_posts = Post.objects.filter(author=customer.user)
+            serializer = CreatePostSerializer(user_posts, many=True)
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class DeletePostAPIView(APIView):
     def delete(self, request, id, *args,**kwargs):
@@ -203,5 +213,6 @@ update_profile_picture = UpdateProfilePictureAPIView.as_view()
 create_post_view = CreatePostAPIView.as_view()
 update_post_view = UpdatePostAPIView.as_view()
 delete_post_view = DeletePostAPIView.as_view()
+user_posts_view = UserPostAPIView.as_view()
 all_posts_view = AllPostsAPIView.as_view()
 page404_view = PageNotFoundAPIView.as_view()

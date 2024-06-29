@@ -61,11 +61,13 @@ class Post(models.Model):
     likes = models.ManyToManyField(User, related_name='liked_by', blank=True)
     dislikes = models.ManyToManyField(User, related_name='disliked_by', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
     # add cloudinary image upload
 
     def __str__(self):
+        # customer = Customer.objects.get(user=self.author)
         return f"{self.title.capitalize()}"
+        #   by {customer.first_name} {customer.last_name}"
     
     def like(self, customer):
         if not self.likes.filter(id=customer.id).exists():

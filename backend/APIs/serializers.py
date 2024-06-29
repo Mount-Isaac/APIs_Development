@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import Post, Customer
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -89,12 +90,15 @@ class CreatePostSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at', 'total_dislikes', 'total_likes']
 
     def get_author(self, obj):
-        customer = Customer.objects.get(user=obj.author)
+        customer = get_object_or_404(Customer, user=obj.author)
         customer_dict =  CustomerSerializer(customer).data
         first_name = customer_dict.get('first_name')
         last_name = customer_dict.get('last_name')
-        return f'{first_name} {last_name}'
-
+        user = {
+            'id': customer.id,
+            'fullname': f'{first_name} {last_name}',
+        }
+        return user
 
 
 class UpdatePostSerializer(serializers.ModelSerializer):
