@@ -17,6 +17,8 @@ const AuthProvider = ({children}) => {
     const [formData, setFormData] = useState({})
     const [loading, setLoading] = useState(false)
     const [updateTokens, setUpdateTokens] = useState(false)
+    const [posts, setPosts] = useState();
+    const [loadingPosts, setLoadingPosts] = useState(false);
     const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('Tokens')))
     const url = "http://localhost:8000/api/"
 
@@ -118,6 +120,8 @@ const AuthProvider = ({children}) => {
         authTokens:authTokens,
         formData:formData,
         loading:loading,
+        loadingPosts:loadingPosts,
+        posts:posts,
 
         // dispatchers
         setUser:setUser,
@@ -150,6 +154,23 @@ const AuthProvider = ({children}) => {
         }
     }, [updateTokens])
 
+    
+    useEffect(()=> {
+        const handlePosts = async() => {
+            try {
+                const endpoint = "http://localhost:8000/api/post/all"
+                const {data,status} = await axios.get(endpoint)
+                console.log(data)
+                setPosts(data)
+                setLoadingPosts(true)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        handlePosts();
+
+    }, [])
 
     return (
         <AuthContext.Provider value={contextData}>
