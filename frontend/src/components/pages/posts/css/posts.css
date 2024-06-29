@@ -1,0 +1,22 @@
+.link-post {
+    font-size: 13px !important;
+    color: rgb(17, 91, 74);
+}
+.post{
+    background-color: whitesmoke;
+}
+.post-p {
+    font-size: 19;
+    font-weight: 600;
+}
+.post-p > span:first-child{
+    color: rgb(47, 43, 130);
+    font-weight: 700;
+}
+.post-p > span:nth-child(2){
+    font-size: 11;
+    font-weight: 400;
+}
+.col-post {
+    border-radius: 9px;
+}

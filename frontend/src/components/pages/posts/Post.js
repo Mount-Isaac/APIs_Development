@@ -309,7 +309,13 @@ function Post() {
                     <>
                         <h4>{obj.title}</h4>
                         <p key={index} className="api-p border p-2 pb-2">
-                            <span><button className="btn btn-secondary btn-custom">Post</button></span>
+                            <span>
+                                <button onClick={()=>handleShow(index)} className="btn btn-secondary btn-custom">
+                                    {
+                                        obj.method ? obj.method[0].toLocaleUpperCase()+obj.method.slice(1) : "Post"
+                                    }
+                                </button>
+                            </span>
                             <span>{obj.endpoint}</span>
                             <span className="mx-3">{obj.text}</span>
                             <span onClick={()=>handleShow(index)}>{arrowElement}</span>

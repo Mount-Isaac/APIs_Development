@@ -44,6 +44,7 @@ const Data = [
 
 
     {
+        method:'get',
         auth:false,
         url:"http://localhost:8000/api/post/view<str:id>",
         endpoint:"/api/post/view/<str:id>",
@@ -68,6 +69,7 @@ const Data = [
 
 
     {
+        method:'get',
         auth:false,
         url:"http://localhost:8000/api/post/all/user/<str:id>",
         endpoint:"/post/all/user/<str:id>",
