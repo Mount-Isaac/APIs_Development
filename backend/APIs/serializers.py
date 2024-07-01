@@ -148,7 +148,7 @@ class AllPostsSerializer(serializers.ModelSerializer):
                     'created_at': comment.created_at
                 }
                 single_comment.append(comments)
-                print('all',single_comment)
+                # print('all',single_comment)
 
         return single_comment
 
