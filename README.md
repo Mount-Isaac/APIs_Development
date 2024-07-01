@@ -1,7 +1,7 @@
 # A Complete Guide to Learning APIs Development
 
 ### Created User Endpoints web page
-![user endpoints](images/user_endpoints.jpg)
+![user endpoints](images/posts_endpoints.jpg)
 
 ### View Post Page with its Actions
 ![View Post Page](images/view_post.jpg)
@@ -88,8 +88,12 @@ yarn start
 #### Logged in user homepage
 ![Logged in user homepage](images/homepage.jpg)
 
-#### Posts endpoints web page
-![APIs endpoint](images/posts_endpoints.jpg)
+#### User endpoints web page
+![APIs endpoint](images/user_endpoints.jpg)
+
+### Create user Endpoint API
+![user endpoints](images/api_create_user.jpg)
+
 
 
 <p>Happy Learning :) </p>
