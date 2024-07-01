@@ -191,6 +191,14 @@ class UserPostAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
         
+class SinglePostViewAPIView(APIView):
+    def get(self, request, id, *args, **kwargs):
+        post = get_object_or_404(Post, id=id)
+        serializer = AllPostsSerializer(post)
+        if serializer:
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class DeletePostAPIView(APIView):
     def delete(self, request, id, *args,**kwargs):
@@ -216,6 +224,7 @@ update_password_view = UpdateUserPasswordAPIView.as_view()
 update_profile_picture = UpdateProfilePictureAPIView.as_view()
 create_post_view = CreatePostAPIView.as_view()
 update_post_view = UpdatePostAPIView.as_view()
+single_post_view = SinglePostViewAPIView.as_view()
 delete_post_view = DeletePostAPIView.as_view()
 user_posts_view = UserPostAPIView.as_view()
 all_posts_view = AllPostsAPIView.as_view()
