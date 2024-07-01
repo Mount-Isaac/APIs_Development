@@ -10,6 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Post, Customer
 from .serializers import (
     MyTokenObtainPairSerializer,
+    AllPostsSerializer,
     CustomerSerializer, 
     UpdatePasswordSerializer,
     UpdateProfileSerializer,
@@ -137,42 +138,45 @@ class UpdateProfilePictureAPIView(APIView):
 
 
 class CreatePostAPIView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         # valid user -> request.user
-        user = get_object_or_404(User, id=4)
+        # user = get_object_or_404(User, )
         serializer = CreatePostSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(author=user)
+            serializer.save(author=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 
 class UpdatePostAPIView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, id, *args, **kwargs):
         # replace with request.user.id
-        user = get_object_or_404(User,id=4)
+        # user = get_object_or_404(User,id=4)
 
         # Post id is a parameterized variable
         post_obj = get_object_or_404(Post, id=id)
 
         # validate Post author 
-        if post_obj.author != user:
+        if post_obj.author != request.user:
             return Response({"Error": "Only the Post author can update their post."}, status=status.HTTP_403_FORBIDDEN)
         
-        serializer = UpdatePostSerializer(post_obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(post_obj.id, post_obj.title, post_obj.content)
+        print(request.data)
+        if post_obj.id == request.data.get('id'):
+            post_obj.title = request.data.get('title')
+            post_obj.content = request.data.get('content')
+            post_obj.save()
+            return Response(request.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
         
 class AllPostsAPIView(APIView):
     def get(self, *args, **kwargs):
         Posts = Post.objects.all().order_by('-updated_at')
-        serializer = CreatePostSerializer(Posts, many=True)
+        serializer = AllPostsSerializer(Posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserPostAPIView(APIView):
