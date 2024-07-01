@@ -1,18 +1,21 @@
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate, useParams } from "react-router-dom";
 import { faComment, faCommentAlt, faHeart, faHeartCircleCheck, faPencil, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AuthContext from "../../utils/AuthProvider";
 import { useState } from "react";
+import axios from "axios";
 
 function ViewPost() {
     const location = useLocation()
     const navigate = useNavigate()
+    const {id} = useParams()
 
     const {user, FormData, setFormData} = useContext(AuthContext)
-    const post = location?.state?.post && location.state.post
-    console.log(post)
-
+    // const post = location?.state?.post && location.state.post
+    // console.log(post)
+    const [post, setPost] = useState([])
+    const [loadingPost, setLoadingPost] = useState(false)
     const [likedPost, setLikedPost] = useState(post ? post.liked : false)
     const [dislikedPost, setDisLikedPost] = useState(post ? post.disliked : false)
     const [writeComment, setWriteComment] = useState(false)
@@ -58,26 +61,65 @@ function ViewPost() {
         return string_title
     }
 
-    const handleLike = () => {
-        setLikedPost(!likedPost)
-        setDisLikedPost(false)
+    const handleLike = (post) => {
+        if(user.fullname){
+            if(!likedPost){
+                setLikedPost(true)
+                setDisLikedPost(false)
+                // const post_ = [...post]
+                post.total_likes += 1
+            }
+        }else{
+            alert("Login to Like this post")
+        }
     }
 
     const handleDislike = () => {
-        setDisLikedPost(!dislikedPost)
-        setLikedPost(false)
+        if(user.fullname){
+            if(!dislikedPost){
+                setDisLikedPost(!dislikedPost)
+                setLikedPost(false)
+            }
+        }else{
+            alert("Login to Dislike this comment")
+        }
     }
 
     const handleComment = () => {
-        setWriteComment(!writeComment)
+        if(user.fullname){
+            setWriteComment(!writeComment)
+        }else{
+            alert('Login to comment this post')
+        }
     }
+
+    useEffect(()=>{
+        const handleFetchPost = async() => {
+            try {
+                setLoadingPost(false)
+                const endpoint = `http://localhost:8000/api/post/view/${id}`
+                const {data,status} = await axios.get(endpoint)
+                console.log(data, status)
+                if(status === 200){
+                    data.liked && setLikedPost(true)
+                    data.disliked && setDisLikedPost(true)
+                    setLoadingPost(true)
+                    setPost(data)
+                }
+            } catch (error) {
+                setLoadingPost(false)
+            }
+        }
+        handleFetchPost()
+
+    }, [])
 
     return ( 
         <div className="p-4 post">
             {
-                post && 
-                <div className="row px-5 py-3">
-                    <div style={{maxHeight:150}} className="col-lg-6 col-md-6 col-sm-12 col-post bg-white border">
+                loadingPost &&
+                <div className="row px-5 py-3 g-2">
+                    <div style={{maxHeight:150}} className="col-post col-lg-6 col-md-6 col-sm-12 bg-white border">
                         <div className="p-3">
                             <p hidden>{post.id}</p>
                             <div className="d-flex justify-content-between align-items-center">
@@ -110,7 +152,7 @@ function ViewPost() {
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <span className="mx-0">
-                                            <span style={{cursor:'pointer'}} onClick={()=>handleLike()} className="mx-1">{likeButton}</span>
+                                            <span style={{cursor:'pointer'}} onClick={()=>handleLike(post)} className="mx-1">{likeButton}</span>
                                             <span >
                                                 {post.liked ? parseInt(post.total_likes)+1 : post.total_likes}
                                             </span>
@@ -148,21 +190,28 @@ function ViewPost() {
                     </div>
 
                     {
-                        post.comment.length > 0 &&
-                        <div className="col-lg-6 col-md-6 col-sm-12 col-ads">
-                            <h5 style={{fontWeight:500, fontSize:15}} className="text-start mx-2">Read other users comments</h5>
-                            {
-                                post.comment.map((comment,key) => (
-                                    <div className="border p-3 m-1 comments">
-                                        <p className="text-primary">{comment.user.fullname}</p>
-                                        <p>{comment.content}</p>
-                                        <p>{handleTime(comment.created_at)}</p>
-                                    </div>
-                                ))
-                            }                                     
-                        </div>
+                        user.fullname 
+                        ?
+                            post.comment.length > 0 &&
+                            <div className="col-lg-6 col-md-6 col-sm-12 col-comments">
+                                <h5 style={{fontWeight:500, fontSize:15}} className="text-start mx-2">Read other users comments</h5>
+                                {
+                                    post.comment.map((comment,key) => (
+                                        <div className="border p-3 m-1 comments">
+                                            <p className="text-primary">{comment.user.fullname}</p>
+                                            <p>{comment.content}</p>
+                                            <p>{handleTime(comment.created_at)}</p>
+                                        </div>
+                                    ))
+                                }                                     
+                            </div>
+                        :
+                            <div className="col-lg-6 col-md-6 col-sm-12">
+                                <h5 style={{fontWeight:500, fontSize:23}} className="text-center text-success mx-2">Login to read other users comments</h5>
+                            </div>
+                        
                     }
-            </div>
+                </div>
         }
 
         </div>

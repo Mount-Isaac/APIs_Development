@@ -8,38 +8,39 @@ function EditPost() {
     const {id} = useParams()
     const navigate = useNavigate()
 
+    const handleUpdatePost = async() => {
+        try {
+            const endpoint = `http://localhost:8000/api/post/update/${id}`
+            const headers = {
+                'Authorization': `Bearer ${authTokens.access}`
+            }
+            const {data,status} = await axios.post(endpoint, formData, {headers})
+            if(status === 200){
+                console.log(data)
+                setPostUpdated(true)
+                navigate(`/api/post/view/${id}`, {state: {post:data}})
+            }
+            console.log(data, status)
+        } catch (error) {
+            const {status} = error?.response?.status && error.response
+            if (status === 401){
+                console.log(error.response.statusText)
+                handleRefreshToken()
+            }
+            
+        }
+    }   
+
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const handleUpdatePost = async() => {
-            try {
-                const endpoint = `http://localhost:8000/api/post/update/${id}`
-                const headers = {
-                    'Authorization': `Bearer ${authTokens.access}`
-                }
-                const {data,status} = await axios.post(endpoint, formData, {headers})
-                if(status === 200){
-                    console.log(data)
-                    setPostUpdated(true)
-                    navigate(`/api/post/view/${id}`, {state: {post:data}})
-                }
-                console.log(data, status)
-            } catch (error) {
-                const {status} = error?.response?.status && error.response
-                if (status === 401){
-                    console.log(error.response.statusText)
-                    handleRefreshToken()
-                }
-                
-            }
-        }   
         // console.log(formData)
         handleUpdatePost()
     }
 
     useEffect(()=>{
         if(tokensUpdated){
-            handleSubmit()
+            handleUpdatePost()
         }
 
     }, [tokensUpdated])
