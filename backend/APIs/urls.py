@@ -8,6 +8,7 @@ from .views import(
     update_profile_picture,
     create_post_view,
     update_post_view,
+    single_post_view,
     user_posts_view,
     all_posts_view,
     delete_post_view,
@@ -26,7 +27,7 @@ urlpatterns = [
     path('user/update/image', update_profile_picture, name='update-image'),
 
     path('post/create', create_post_view, name='create-post'),
-    path('post/view/<str:id>', create_post_view, name='create-post'),
+    path('post/view/<str:id>', single_post_view, name='create-post'),
     path('post/update/<str:id>', update_post_view, name='update-post'),
     path('post/delete/<str:id>', delete_post_view, name='delete-post'),
     path('post/all', all_posts_view, name='all-posts'),
