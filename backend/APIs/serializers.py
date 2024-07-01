@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Post, Customer
+from .models import Post, Customer,Comment
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -86,8 +86,8 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post 
-        fields = ['id', 'author', 'title', 'content', 'total_likes', 'total_dislikes', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'total_dislikes', 'total_likes']
+        fields = ['id', 'author', 'title', 'content', 'liked', 'disliked', 'total_likes', 'total_dislikes', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'liked', 'disliked', 'updated_at', 'total_dislikes', 'total_likes']
 
     def get_author(self, obj):
         customer = get_object_or_404(Customer, user=obj.author)
@@ -101,9 +101,59 @@ class CreatePostSerializer(serializers.ModelSerializer):
         return user
 
 
+
 class UpdatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'author', 'title', 'content', 'updated_at']
         read_only_fields = ['id', 'updated_at']
     
+class AllPostsSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField()
+    comment = serializers.SerializerMethodField()
+    # total_likes = serializers.IntegerField()
+    # total_dislikes = serializers.IntegerField()
+
+    class Meta:
+        model = Post 
+        fields = ['id', 'author', 'title', 'comment', 'content', 'liked', 'disliked', 'total_likes', 'total_dislikes', 'created_at', 'updated_at']
+
+    def get_author(self, obj):
+        customer = get_object_or_404(Customer, user=obj.author)
+        customer_dict =  CustomerSerializer(customer).data
+        first_name = customer_dict.get('first_name')
+        last_name = customer_dict.get('last_name')
+        user = {
+            'id': customer.id,
+            'fullname': f'{first_name} {last_name}',
+        }
+        return user
+    
+    # return comments for every post 
+    def get_comment(self,obj):
+        post = get_object_or_404(Post, id=obj.id)
+        comments = Comment.objects.filter(post=post)
+        single_comment = []
+            
+
+        if comments:
+            for comment in comments:
+                user = {
+                    'id': comment.post.author.id,
+                    'fullname': f'{comment.user.email}'
+                }
+                comments = {
+                    'user': user,
+                    'content': comment.content,
+                    'created_at': comment.created_at
+                }
+                single_comment.append(comments)
+                print('all',single_comment)
+
+        return single_comment
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['post', 'user', 'content']
