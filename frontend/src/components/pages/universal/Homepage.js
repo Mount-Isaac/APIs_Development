@@ -52,7 +52,10 @@ export default function Homepage() {
                             <h3>Users</h3>
                             <p>To interact with ours APIs from a webpage point of view, follow this link.</p>
                             <p>See the magic of APIs without having to understand them.</p>
-                            <Link to="/api/posts/all">All posts</Link>
+                            <div className="d-flex justify-content-around">
+                                <Link to="/api/posts/all">All posts</Link>
+                                <Link to="/api/post/create">Create a post</Link>
+                            </div>
                         </div>
                     </div>
                 </div>
