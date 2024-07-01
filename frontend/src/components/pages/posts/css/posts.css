@@ -20,3 +20,54 @@
 .col-post {
     border-radius: 9px;
 }
+.title-text {
+    font-size: 19px;
+    text-align: center;
+    text-wrap:wrap;
+    text-transform: uppercase;
+    border: none !important;
+    border-bottom: 1px solid black !important;
+    border-top-left-radius:  3px;
+    border-top-right-radius: 3px;
+    width: 70%;
+    padding: 5px;
+}
+.title-text:focus {
+    border-top-left-radius:  10px;
+    border-top-right-radius: 10px;
+    box-shadow: none !important;
+    border: none !important;
+    outline: 2px solid powderblue !important;
+    border: 1px dotted blue;
+}
+.btn-create {
+    width: 120px;
+    margin-top: 10px;
+}
+.content-text {
+    overflow-y: auto;
+    min-height: 150px !important;
+}
+
+.comments > p {
+    margin-bottom: 3px;
+    font-size: 15px;
+}
+
+.comments:hover {
+    box-shadow: inset;
+    background-color: wheat;
+}
+.btn-comment {
+    border-radius: 6px;
+    background-color: rgb(181, 96, 96);
+    font-weight: 500;
+    color: white;
+    font-size: 14px;
+    border: 2px solid black;
+}
+.btn-comment:hover {
+    background-color: brown;
+    font-size: 16px;
+    box-shadow: (0,0.5,0.5,0) rgb(99, 64, 213);
+}

@@ -29,7 +29,7 @@ function AllPosts() {
     
     return ( 
         <div style={{backgroundColor:'whitesmoke'}} className="container-fluid pb-5">
-            <h2 className="text-center py-2 text-primary">View and scroll all posts</h2>
+            <h2 className="text-center py-3 text-primary">View and scroll all posts</h2>
         {
             posts && posts.map((post, key) => (
                 <div  key={key} className="border p-3 m-3 bg-white">
@@ -54,7 +54,7 @@ function AllPosts() {
 
                     </p>
                     <div style={{cursor:'pointer'}} onClick={()=>handleViewPost(post)} >
-                        <p>{post.content.slice(1,100)}...</p>
+                        <p>{post.content.slice(0,100)}...</p>
                         <div className="d-flex justify-content-between">
                             <div>
                                 <span className="mx-1">
@@ -65,6 +65,15 @@ function AllPosts() {
                                 <span className="mx-1">
                                     <span className="mx-2">{dislikeButton}</span>
                                     <span className="mx-1">{post.total_dislikes}</span>
+                                </span>
+
+                                <span className="mx-1">
+                                    <span className="mx-2">
+                                        {
+                                            post.comment.length > 0 ? `${post.comment.length}
+                                            ${post.comment.length === 1 ? "comment" : "comments"}` : ""
+                                        }
+                                    </span>
                                 </span>
 
                             </div>

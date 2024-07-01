@@ -1,21 +1,28 @@
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { faComment, faCommentAlt, faHeart, faPencil, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faCommentAlt, faHeart, faHeartCircleCheck, faPencil, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 import AuthContext from "../../utils/AuthProvider";
 import { useState } from "react";
 
 function ViewPost() {
-    const likeButton = <FontAwesomeIcon icon={faHeart} color="red" size="lg"/>
-    const dislikeButton = <FontAwesomeIcon icon={faThumbsDown}  size="lg"/>
-    const commentButton = <FontAwesomeIcon icon={faCommentAlt} color="black" size="lg"/>
-
     const location = useLocation()
     const navigate = useNavigate()
 
-    const {user} = useContext(AuthContext)
+    const {user, FormData, setFormData} = useContext(AuthContext)
     const post = location?.state?.post && location.state.post
     console.log(post)
+
+    const [likedPost, setLikedPost] = useState(post ? post.liked : false)
+    const [dislikedPost, setDisLikedPost] = useState(post ? post.disliked : false)
+    const [writeComment, setWriteComment] = useState(false)
+
+    const likeButton = <FontAwesomeIcon icon={likedPost ? faHeartCircleCheck: faHeart} color={likedPost && "red"} size="lg"/>
+    const dislikeButton = <FontAwesomeIcon icon={faThumbsDown} color={ dislikedPost&& "blue"} size="lg"/>
+    const commentButton = <FontAwesomeIcon icon={faCommentAlt} color="black" size="lg"/>
+
+
+    post && setFormData(post)
 
     const handleTime = (date) => {
         const date_ = new Date(date)
@@ -25,6 +32,10 @@ function ViewPost() {
     const handleViewUser = (author) => {
         navigate(`/api/posts/user/${author.id}`, {state: {author:author}})
 
+    }
+
+    const handleEditPost = () => {
+        navigate(`/api/post/edit/${post.id}`)
     }
 
     const handleTag = (title) => {
@@ -47,70 +58,113 @@ function ViewPost() {
         return string_title
     }
 
+    const handleLike = () => {
+        setLikedPost(!likedPost)
+        setDisLikedPost(false)
+    }
+
+    const handleDislike = () => {
+        setDisLikedPost(!dislikedPost)
+        setLikedPost(false)
+    }
+
+    const handleComment = () => {
+        setWriteComment(!writeComment)
+    }
+
     return ( 
         <div className="p-4 post">
-            <div className="row px-5 py-3">
-                {
-                    post && 
-                        <div className="col-lg-6 col-md-6 col-sm-12 col-post bg-white border">
-                            <div className="p-3">
-                                <p hidden>{post.id}</p>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <span>
-                                        <p className="mb-0 post-p">
-                                            <span>{handleTag(post.title)}</span>
-                                            <span onClick={()=>handleViewUser(post.author)} className="mx-2">
-                                                <Link
-                                                    className="link-post">
-                                                    @{post.author.fullname.split(" ")[0]}
-                                                </Link>
+            {
+                post && 
+                <div className="row px-5 py-3">
+                    <div style={{maxHeight:150}} className="col-lg-6 col-md-6 col-sm-12 col-post bg-white border">
+                        <div className="p-3">
+                            <p hidden>{post.id}</p>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <span>
+                                    <p className="mb-0 post-p">
+                                        <span>{handleTag(post.title)}</span>
+                                        <span onClick={()=>handleViewUser(post.author)} className="mx-2">
+                                            <Link
+                                                className="link-post">
+                                                @{post.author.fullname.split(" ")[0]}
+                                            </Link>
+                                        </span>
+                                    </p>
+                                </span>
+
+                                <span>
+                                    <p className="mb-0 text-end">
+                                        {user.fullname && post.author.fullname.toLowerCase() === user.fullname.toLowerCase() && 
+                                        <div style={{cursor:'pointer'}} onClick={()=>handleEditPost()}>
+                                            <span style={{fontSize:13}} className="mx-1">edit</span>
+                                            <span><FontAwesomeIcon icon={faPencil}/></span>
+                                        </div>}
+                                    </p>
+                                </span>
+                            </div><hr/>
+
+                            <div className="my-1" style={{lineHeight:'2'}}>
+                                <p>{post.content}</p>
+
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <span className="mx-0">
+                                            <span style={{cursor:'pointer'}} onClick={()=>handleLike()} className="mx-1">{likeButton}</span>
+                                            <span >
+                                                {post.liked ? parseInt(post.total_likes)+1 : post.total_likes}
                                             </span>
-                                        </p>
-                                    </span>
-
-                                    <span>
-                                        <p className="mb-0 text-end">
-                                            {user.fullname && post.author.fullname.toLowerCase() === user.fullname.toLowerCase() && 
-                                            <div>
-                                                <span style={{fontSize:13}} className="mx-1">edit</span>
-                                                <span><FontAwesomeIcon icon={faPencil}/></span>
-                                            </div>}
-                                        </p>
-                                    </span>
-                                </div><hr/>
-
-                                <div className="my-1" style={{lineHeight:'2'}}>
-                                    <p>{post.content}</p>
-
-                                    <div className="d-flex justify-content-between">
-                                        <div>
-                                            <span className="mx-0">
-                                                <span className="mx-1">{likeButton}</span>
-                                                <span>{post.total_likes}</span>
+                                        </span>
+                                        
+                                        <span className="mx-1">
+                                            <span style={{cursor:'pointer'}} onClick={()=>handleDislike()} className="mx-2">{dislikeButton}</span>
+                                            <span  className="mx-1">
+                                                {post.disliked ? parseInt(post.total_dislikes)+1 : post.total_dislikes}
                                             </span>
-                                            
-                                            <span className="mx-1">
-                                                <span className="mx-2">{dislikeButton}</span>
-                                                <span className="mx-1">{post.total_dislikes}</span>
-                                            </span>
+                                        </span>
 
-                                            <span className="mx-0">
-                                                <span className="mx-1">{commentButton}</span>
-                                                <span className="mx-1">{post.total_dislikes}</span>
-                                            </span>
+                                        <span className="mx-0">
+                                            <span onClick={handleComment} style={{cursor:'pointer'}} className="mx-1">{commentButton}</span>
+                                            <span className="mx-1">{post.comment.length}</span>
+                                        </span>
 
-                                        </div>
-                                        <span className="text-info">{handleTime(post.created_at)}</span>
                                     </div>
+                                    <span className="text-info">{handleTime(post.created_at)}</span>
                                 </div>
                             </div>
                         </div>
-                }
+                        {
+                            writeComment &&
+                            <div className="p-2 bg-white border">
+                                <form onSubmit={(e)=>e.preventDefault()}>
+                                    <div className="input-group form-control">
+                                        <input required className="form-control" type="text" placeholder="comment now..." />
+                                        <button className="btn-comment">Comment</button>
+                                    </div>
 
-                <div className="col-lg-6 col-md-6 col-sm-12 col-ads">
-                    Other adds
-                </div>
+                                </form>
+                            </div>
+                        }                    
+                    </div>
+
+                    {
+                        post.comment.length > 0 &&
+                        <div className="col-lg-6 col-md-6 col-sm-12 col-ads">
+                            <h5 style={{fontWeight:500, fontSize:15}} className="text-start mx-2">Read other users comments</h5>
+                            {
+                                post.comment.map((comment,key) => (
+                                    <div className="border p-3 m-1 comments">
+                                        <p className="text-primary">{comment.user.fullname}</p>
+                                        <p>{comment.content}</p>
+                                        <p>{handleTime(comment.created_at)}</p>
+                                    </div>
+                                ))
+                            }                                     
+                        </div>
+                    }
             </div>
+        }
+
         </div>
      );
 }
