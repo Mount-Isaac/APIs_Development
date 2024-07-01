@@ -16,7 +16,8 @@ const AuthProvider = ({children}) => {
     );
     const [formData, setFormData] = useState({})
     const [loading, setLoading] = useState(false)
-    const [updateTokens, setUpdateTokens] = useState(false)
+    const [tokensUpdated, setTokensUpdated] = useState(false)
+    const [postUpdated, setPostUpdated] = useState(false) 
     const [posts, setPosts] = useState();
     const [loadingPosts, setLoadingPosts] = useState(false);
     const [authTokens, setAuthTokens] = useState(localStorage.getItem('authTokens') && JSON.parse(localStorage.getItem('Tokens')))
@@ -113,6 +114,46 @@ const AuthProvider = ({children}) => {
         }))
     }
 
+    // const refresh tokens 
+    const handleRefreshToken = async () => {
+        try {
+            setTokensUpdated(false);
+            const endpoint = "http://localhost:8000/api/token/refresh"
+            const {data,status} = await axios.post(endpoint, {refresh:authTokens.refresh})
+            // console.log(data, status)
+            if(status === 200){
+                setAuthTokens(data)
+                // update authtokens in local storage
+                // remove them 
+                localStorage.removeItem('Tokens');
+                // add them
+                localStorage.setItem('Tokens', JSON.stringify(
+                    {
+                        'access': data.access,
+                        'refresh': data.refresh
+                    }
+                ));
+                setTokensUpdated(true)
+            };
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    // update a post 
+    const handlePosts = async() => {
+        try {
+            const endpoint = "http://localhost:8000/api/post/all"
+            const {data,status} = await axios.get(endpoint)
+            console.log(data)
+            setPosts(data)
+            setLoadingPosts(true)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     // data passed between component
     const contextData = {
         // variables
@@ -122,55 +163,56 @@ const AuthProvider = ({children}) => {
         loading:loading,
         loadingPosts:loadingPosts,
         posts:posts,
+        tokensUpdated:tokensUpdated,
+        postUpdated:postUpdated,
 
         // dispatchers
         setUser:setUser,
         setFormData, setFormData,
         setAuthTokens:setAuthTokens,
+        setTokensUpdated:setTokensUpdated,
+        setPostUpdated:setPostUpdated,
 
         // functions
         handleLogin:handleLogin,
         handleSubmit:handleSubmit,
         handleChange:handleChange,
+        handleRefreshToken:handleRefreshToken,
         handleLogout:handleLogout
     }
 
-    // define useEffects hooks here 
-    useEffect(()=> {
-        const twenty_minutes = 60 * 1000 * 20
-        let timeoutid
-
-        timeoutid = setTimeout(()=> {
-            // update tokens by accessing refresh endpoint
-            // simulation
-            setAuthTokens({'access': '', 'refresh': ''})
-
-        }, twenty_minutes)
-
-        // clear the timeout instance after 20 mins 
-        // after tokens have been updated
-        return () => {
-            clearTimeout(timeoutid)
-        }
-    }, [updateTokens])
-
-    
-    useEffect(()=> {
-        const handlePosts = async() => {
-            try {
-                const endpoint = "http://localhost:8000/api/post/all"
-                const {data,status} = await axios.get(endpoint)
-                console.log(data)
-                setPosts(data)
-                setLoadingPosts(true)
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
+    // define useEffects hooks here     
+    useEffect(()=> {        
         handlePosts();
 
     }, [])
+
+    useEffect(()=> {   
+        if(tokensUpdated || postUpdated){
+            console.log('posts updated')
+            handlePosts();
+            setPostUpdated(false)
+        }
+
+    }, [tokensUpdated, postUpdated])
+
+
+    // refresh tokens evry 10 minutes
+    useEffect(()=> {
+        // server tokens expire after 10 mins so, 
+        // update the frontend in 9 minutes to ensure the tokens remain valid 
+        const ten_minutes = 1000*60*9
+        // let id = ''
+
+        const id = setInterval(()=> {
+            handleRefreshToken()
+            console.log('updated tokens')
+        }, ten_minutes)
+
+        return () => {clearInterval(id)}
+
+
+    })
 
     return (
         <AuthContext.Provider value={contextData}>
