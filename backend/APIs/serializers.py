@@ -138,9 +138,10 @@ class AllPostsSerializer(serializers.ModelSerializer):
 
         if comments:
             for comment in comments:
+                # customer = get_object_or_404(Customer, user=comment.user)
                 user = {
                     'id': comment.post.author.id,
-                    'fullname': f'{comment.user.email}'
+                    'fullname': f'{comment.user.first_name} {comment.user.last_name}'
                 }
                 comments = {
                     'user': user,
