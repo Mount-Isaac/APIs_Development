@@ -1,8 +1,7 @@
 # A Complete Guide to Learning APIs Development
 
-#### Backend Django url endpoint:
-[https://apis-backend-3ba457041cc4.herokuapp.com/api/auth/register](https://apis-backend-3ba457041cc4.herokuapp.com/api/auth/register)
-
+#### The application URL:
+[https://apis-frontend-9e2044d5bb65.herokuapp.com](https://apis-frontend-9e2044d5bb65.herokuapp.com/)
 ```
 DISCLAIMER: I am using Cloudinary to store the images.
 Files will be deleted after 24 hours.
